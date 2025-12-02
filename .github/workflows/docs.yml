@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      - deploy-docs-2ghb-pages
     paths:
       - 'docs/**'
       - 'reqs/**'
       - '.github/workflows/docs.yml'
+      - 'arch/**'
   pull_request:
     branches:
       - main
@@ -16,6 +16,7 @@ on:
       - 'docs/**'
       - 'reqs/**'
       - '.github/workflows/docs.yml'
+      - 'arch/**'
   workflow_dispatch:
 
 permissions:
