@@ -1,0 +1,4 @@
+sphinx
+sphinx-needs
+sphinx-rtd-theme>=2.0.0
+
