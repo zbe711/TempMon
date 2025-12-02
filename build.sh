@@ -3,9 +3,32 @@ set -e
 
 usage() {
     echo "Usage: $0 -l C99|Cpp"
+    echo "   or: $0 docs"
     exit 1
 }
 
+# Check if first argument is "docs"
+if [ "$1" = "docs" ]; then
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    DOCS_DIR="$SCRIPT_DIR/docs"
+    BUILD_DOCS_DIR="$SCRIPT_DIR/build/docs"
+    
+    # Check if sphinx-build is available
+    if ! command -v sphinx-build >/dev/null 2>&1; then
+        echo "Error: sphinx-build not found. Please install Sphinx:"
+        echo "  pip install -r docs/requirements.txt"
+        exit 1
+    fi
+    
+    echo "Building documentation..."
+    mkdir -p "$BUILD_DOCS_DIR"
+    sphinx-build -b html "$DOCS_DIR" "$BUILD_DOCS_DIR"
+    
+    echo "Documentation build finished. Open: $BUILD_DOCS_DIR/index.html"
+    exit 0
+fi
+
+# Original C/C++ build logic
 LANG_CHOICE=""
 
 while getopts "l:" opt; do
@@ -35,12 +58,11 @@ case "$LANG_CHOICE" in
     *)
         echo "Invalid language: $LANG_CHOICE"
         echo "Valid options are: C99, Cpp"
-        # exit 1
+        exit 1
         ;;
 esac
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-echo "SCRIPT_DIR: $SCRIPT_DIR"
 BUILD_DIR="$SCRIPT_DIR/build"
 
 mkdir -p "$BUILD_DIR"
