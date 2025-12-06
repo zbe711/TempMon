@@ -10,7 +10,6 @@ copyright = f"{year}, {author}"
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx_needs",
-    "sphinx_rtd_theme",
 ]
 
 templates_path = ["_templates"]
