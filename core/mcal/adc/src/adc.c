@@ -11,6 +11,8 @@ static adc_dma_callback_t g_dma_callback = NULL;
 static uint16_t g_adc_buffer = 0;
 static bool g_conversion_in_progress = false;
 
+static int adc_configure(adc_channel_t channel, uint8_t resolution);
+
 static void simulate_dma_completion(void)
 {
     if (g_dma_callback != NULL)
@@ -25,10 +27,10 @@ void adc_init(void)
     g_adc_buffer = 0;
     g_conversion_in_progress = false;
     
-    adc_configure(ADC_CHANNEL_TEMP, 12);
+    (void)adc_configure(ADC_CHANNEL_TEMP, 12);
 }
 
-int adc_configure(adc_channel_t channel, uint8_t resolution)
+static int adc_configure(adc_channel_t channel, uint8_t resolution)
 {
     return 0;
 }
