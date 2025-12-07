@@ -18,12 +18,3 @@ bool i2c_read(void* handle, uint8_t addr, uint16_t reg, uint8_t* buffer, size_t 
 {
     return true;
 }
-
-bool i2c_write(void* handle, uint8_t addr, uint16_t reg, uint8_t* buffer, size_t size)
-{
-    return true;
-}
-
-void i2c_close(void* handle)
-{
-}

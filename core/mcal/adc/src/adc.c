@@ -24,6 +24,8 @@ void adc_init(void)
     g_dma_callback = NULL;
     g_adc_buffer = 0;
     g_conversion_in_progress = false;
+    
+    adc_configure(ADC_CHANNEL_TEMP, 12);
 }
 
 int adc_configure(adc_channel_t channel, uint8_t resolution)

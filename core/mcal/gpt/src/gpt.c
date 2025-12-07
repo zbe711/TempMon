@@ -86,28 +86,3 @@ int gpt_start(uint8_t channel)
     
     return 0;
 }
-
-void gpt_stop(uint8_t channel)
-{
-    if (channel >= GPT_MAX_CHANNELS)
-    {
-        return;
-    }
-    
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-    g_channels[channel].running = false;
-    if (g_channels[channel].thread != 0)
-    {
-        pthread_join(g_channels[channel].thread, NULL);
-    }
-#endif
-}
-
-uint32_t gpt_get_counter(uint8_t channel)
-{
-    if (channel >= GPT_MAX_CHANNELS)
-    {
-        return 0;
-    }
-    return 0;
-}
