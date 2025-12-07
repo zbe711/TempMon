@@ -35,4 +35,8 @@ Software Architecture
 .. include:: ../arch/sw_arch_tempmon.rst
 
 
+Design Decisions
+----------------
+
+.. include:: ../arch/ddd/design_decisions.rst
 
