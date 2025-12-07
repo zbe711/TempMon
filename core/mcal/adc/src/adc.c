@@ -35,23 +35,24 @@ int adc_configure(adc_channel_t channel, uint8_t resolution)
 
 int adc_start_conversion(adc_channel_t channel)
 {
-    if (g_conversion_in_progress)
+    int retval = -1;
+    
+    if (!g_conversion_in_progress)
     {
-        return -1;
+        g_conversion_in_progress = true;
+        
+#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
+        g_adc_buffer = (uint16_t)(rand() % 4096);
+#else
+        g_adc_buffer = 2048;
+#endif
+        
+        simulate_dma_completion();
+        g_conversion_in_progress = false;
+        retval = 0;
     }
     
-    g_conversion_in_progress = true;
-    
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-    g_adc_buffer = (uint16_t)(rand() % 4096);
-#else
-    g_adc_buffer = 2048;
-#endif
-    
-    simulate_dma_completion();
-    g_conversion_in_progress = false;
-    
-    return 0;
+    return retval;
 }
 
 uint16_t adc_read_raw(adc_channel_t channel)

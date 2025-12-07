@@ -56,33 +56,39 @@ void gpt_init(void)
 
 int gpt_configure(uint8_t channel, uint32_t freq_hz, void (*callback)(void))
 {
-    if (channel >= GPT_MAX_CHANNELS)
+    int retval = -1;
+    
+    if (channel < GPT_MAX_CHANNELS)
     {
-        return -1;
+        g_channels[channel].freq_hz = freq_hz;
+        g_channels[channel].callback = callback;
+        g_channels[channel].configured = true;
+        retval = 0;
     }
     
-    g_channels[channel].freq_hz = freq_hz;
-    g_channels[channel].callback = callback;
-    g_channels[channel].configured = true;
-    
-    return 0;
+    return retval;
 }
 
 int gpt_start(uint8_t channel)
 {
-    if (channel >= GPT_MAX_CHANNELS || !g_channels[channel].configured)
-    {
-        return -1;
-    }
+    int retval = -1;
     
+    if (channel < GPT_MAX_CHANNELS && g_channels[channel].configured)
+    {
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-    g_channels[channel].running = true;
-    if (pthread_create(&g_channels[channel].thread, NULL, timer_thread, &g_channels[channel]) != 0)
-    {
-        g_channels[channel].running = false;
-        return -1;
-    }
+        g_channels[channel].running = true;
+        if (pthread_create(&g_channels[channel].thread, NULL, timer_thread, &g_channels[channel]) == 0)
+        {
+            retval = 0;
+        }
+        else
+        {
+            g_channels[channel].running = false;
+        }
+#else
+        retval = 0;
 #endif
+    }
     
-    return 0;
+    return retval;
 }

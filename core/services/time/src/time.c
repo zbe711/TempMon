@@ -29,16 +29,14 @@ void time_init(void)
 
 int time_start_timer(uint32_t freq_hz)
 {
-    int retval = 0;
+    int retval = -1;
 
-    if (gpt_configure(0, freq_hz, timer_callback) != 0)
+    if (gpt_configure(0, freq_hz, timer_callback) == 0)
     {
-        retval = -1;
-    }
-    
-    if (gpt_start(0) != 0)
-    {
-        retval = -1;
+        if (gpt_start(0) == 0)
+        {
+            retval = 0;
+        }
     }
     
     return retval;
