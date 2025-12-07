@@ -33,7 +33,7 @@ The deployment diagram shows the mapping of software components to hardware reso
 Interface Diagram
 -----------------
 
-TBD - Interface diagram to be added.
+Skipped for the scope of this task.
 
 High Level Sequence Diagram
 ----------------------------
