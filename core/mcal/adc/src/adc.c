@@ -2,10 +2,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "adc.h"
-
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-#include <stdlib.h>
-#endif
+#include "mock.h"
 
 static adc_dma_callback_t g_dma_callback = NULL;
 static uint16_t g_adc_buffer = 0;
@@ -44,7 +41,7 @@ int adc_start_conversion(adc_channel_t channel)
         g_conversion_in_progress = true;
         
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-        g_adc_buffer = (uint16_t)(rand() % 4096);
+        g_adc_buffer = mock_adc_get_value();
 #else
         g_adc_buffer = 2048;
 #endif

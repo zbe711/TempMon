@@ -1,13 +1,8 @@
 #include "gpt.h"
+#include "mock.h"
 #include <stddef.h>
 #include <stdbool.h>
-
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-#include <pthread.h>
-#include <unistd.h>
-#else
 #include <stdint.h>
-#endif
 
 #define GPT_MAX_CHANNELS 4
 
@@ -17,30 +12,11 @@ typedef struct
     uint32_t freq_hz;
     void (*callback)(void);
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-    pthread_t thread;
-    bool running;
+    mock_timer_t timer;
 #endif
 } gpt_channel_t;
 
 static gpt_channel_t g_channels[GPT_MAX_CHANNELS] = {0};
-
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-static void* timer_thread(void* arg)
-{
-    gpt_channel_t* channel = (gpt_channel_t*)arg;
-    uint32_t period_us = 1000000 / channel->freq_hz;
-    
-    while (channel->running)
-    {
-        if (channel->callback != NULL)
-        {
-            channel->callback();
-        }
-        usleep(period_us);
-    }
-    return NULL;
-}
-#endif
 
 void gpt_init(void)
 {
@@ -48,9 +24,6 @@ void gpt_init(void)
     {
         g_channels[i].configured = false;
         g_channels[i].callback = NULL;
-#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-        g_channels[i].running = false;
-#endif
     }
 }
 
@@ -76,15 +49,9 @@ int gpt_start(uint8_t channel)
     if (channel < GPT_MAX_CHANNELS && g_channels[channel].configured)
     {
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
-        g_channels[channel].running = true;
-        if (pthread_create(&g_channels[channel].thread, NULL, timer_thread, &g_channels[channel]) == 0)
-        {
-            retval = 0;
-        }
-        else
-        {
-            g_channels[channel].running = false;
-        }
+        retval = mock_timer_start(&g_channels[channel].timer, 
+                                   g_channels[channel].freq_hz, 
+                                   g_channels[channel].callback);
 #else
         retval = 0;
 #endif
