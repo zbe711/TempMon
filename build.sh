@@ -10,22 +10,14 @@ usage() {
 # Check if first argument is "docs"
 if [ "$1" = "docs" ]; then
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    DOCS_DIR="$SCRIPT_DIR/docs"
-    BUILD_DOCS_DIR="$SCRIPT_DIR/build/docs"
+    BUILD_DOCS_SCRIPT="$SCRIPT_DIR/tools/scripts/build_docs.sh"
     
-    # Check if sphinx-build is available
-    if ! command -v sphinx-build >/dev/null 2>&1; then
-        echo "Error: sphinx-build not found. Please install Sphinx:"
-        echo "  pip install -r docs/requirements.txt"
+    if [ ! -f "$BUILD_DOCS_SCRIPT" ]; then
+        echo "Error: Documentation build script not found: $BUILD_DOCS_SCRIPT"
         exit 1
     fi
     
-    echo "Building documentation..."
-    mkdir -p "$BUILD_DOCS_DIR"
-    sphinx-build -b html "$DOCS_DIR" "$BUILD_DOCS_DIR"
-    
-    echo "Documentation build finished. Open: $BUILD_DOCS_DIR/index.html"
-    exit 0
+    exec "$BUILD_DOCS_SCRIPT"
 fi
 
 # Original C/C++ build logic
