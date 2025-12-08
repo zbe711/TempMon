@@ -1,10 +1,5 @@
 // Simple C++ HelloWorld entry point
-#include <iostream>
-
-static void hello_cpp()
-{
-    std::cout << "Hello, world from C++!" << std::endl;
-}
+#include "mock.hpp"
 
 int main()
 {

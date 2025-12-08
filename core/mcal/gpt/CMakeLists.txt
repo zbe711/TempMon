@@ -1,4 +1,8 @@
 # GPT driver - collect sources and includes
-set(MCAL_GPT_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/gpt.c PARENT_SCOPE)
+set(MCAL_GPT_SOURCES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/gpt.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/gpt.cpp
+    PARENT_SCOPE
+)
 set(MCAL_GPT_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/inc PARENT_SCOPE)
 
