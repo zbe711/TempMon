@@ -77,16 +77,4 @@ int mock_timer_start(mock_timer_t* timer, uint32_t freq_hz, void (*callback)(voi
     return retval;
 }
 
-void mock_timer_stop(mock_timer_t* timer)
-{
-    if (timer != NULL && timer->running)
-    {
-        timer->running = false;
-        if (timer->thread != 0)
-        {
-            pthread_join(timer->thread, NULL);
-        }
-    }
-}
-
 #endif
