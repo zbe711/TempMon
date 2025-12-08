@@ -45,21 +45,44 @@ The sequence diagram shows the dynamic behavior and interaction between software
    :align: center
    :width: 90%
 
-SWE.3 Software Unit Design
+SWE.3 Software Detailed Design
 ----------------------------
 
-Class Diagram
-~~~~~~~~~~~~~
+C++ OOP Implementation
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Class Diagram (OOP)
+^^^^^^^^^^^^^^^^^^^
+
+Object-oriented class diagram showing C++ classes with inheritance, polymorphism, and encapsulation.
+
+.. image:: ../arch/swe3/class_diagram_oop.drawio.svg
+   :alt: TempMon C++ OOP Class Diagram
+   :align: center
+   :width: 90%
+
+C Implementation
+~~~~~~~~~~~~~~~~~
+
+Class Diagram (C)
+^^^^^^^^^^^^^^^^^
 
 Class diagram showing software units, their attributes, methods, and relationships.
 
+.. note::
+   In C, the term "class diagram" is used metaphorically to represent modular design:
+   
+   - **Public methods**: Functions declared in `.h` header files (external linkage)
+   - **Private methods**: Static functions defined only in `.c` files (internal linkage)
+   - **Attributes**: Module-level static variables or struct members
+
 .. image:: ../arch/swe3/class_diagram.drawio.svg
-   :alt: TempMon Class Diagram
+   :alt: TempMon C Class Diagram
    :align: center
    :width: 90%
 
 Activity Diagram
-~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^
 
 Activity diagram showing the flow of operations within software units.
 
@@ -69,7 +92,7 @@ Activity diagram showing the flow of operations within software units.
    :width: 90%
 
 Detailed Sequence Diagram
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Detailed sequence diagram for complex unit interactions (optional).
 
