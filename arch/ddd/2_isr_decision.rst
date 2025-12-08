@@ -1,17 +1,36 @@
-Main Loop with Volatile Flag
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Direct ISR Processing
+~~~~~~~~~~~~~~~~~~~~~
 
-**Decision:** Use a volatile flag set by the ISR and processed in the main while loop for temperature monitoring.
+**Decision:** Process temperature samples directly within the ISR without using a volatile flag or main loop processing.
 
 **Rationale:**
 
-- ISR only sets a volatile flag when DMA transfer completes, minimizing ISR execution time
-- Main loop continuously checks the flag and processes temperature conversion, range evaluation, and LED updates
-- Allows for future expansion of main loop functionality
-- Reduces ISR complexity and execution time
-- Volatile keyword ensures proper memory visibility between ISR and main loop
+- **Assumptions:**
+
+  - CPU clock frequency: 400 MHz or 500 MHz
+  - Sampling frequency: 10 kHz (100 μs period)
+  - ISR execution time: < 1% of ISR period
+
+- **CPU Cycle Budget:**
+
+  - At 400 MHz: 100 μs period = 40,000 CPU cycles available
+  - At 500 MHz: 100 μs period = 50,000 CPU cycles available
+  - ISR uses < 400 cycles in best case scenario.
+
+- **Guarantees:**
+
+  - ISR completes well before the next interrupt occurs
+  - No risk of interrupt overlap or missed samples
+  - Eliminates need for critical sections and volatile flags
+  - Reduces code complexity and memory overhead
+
+- **ISR Operations:**
+
+  - ADC raw value read (~50 cycles)
+  - Threshold comparison (~100 cycles)
+  - LED GPIO updates (~150 cycles)
+  - Total: < 400 cycles
 
 **Alternatives Considered:**
 
-- **ISR-based processing:** Rejected to allow for main loop expansion and reduce ISR complexity
-- **Polling without flag:** Rejected due to unnecessary CPU load when no new samples are available
+- **Volatile flag with main loop processing:** Implemented in V1.0, please checkout the release tag.
