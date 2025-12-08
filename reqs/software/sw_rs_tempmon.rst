@@ -49,28 +49,28 @@
 
    When the hardware revision is Rev-B, the software shall apply a normalization factor of 10 to the temperature thresholds.
 
-.. req:: DMA transfer complete flag
+.. req:: DMA transfer complete ISR processing
    :id: SW_RS_ID_10
 
-   When DMA completes a transfer, the interrupt service routine shall set a volatile flag to indicate that a new ADC sample is available.
+   When DMA completes a transfer, the interrupt service routine shall directly process the temperature sample for LED update.
 
-.. req:: Main loop processing
+.. req:: Temperature sample processing in ISR
    :id: SW_RS_ID_11
 
-   The software shall continuously check the availability flag and process new temperature samples when the flag is set.
+   The ISR shall process new temperature samples immediately upon DMA completion, ensuring execution completes within 1% of the sampling period.
 
-.. req:: Temperature range evaluation in main loop
+.. req:: Temperature range evaluation in ISR
    :id: SW_RS_ID_12
 
-   When a new sample is received on memory, the software shall compare the ADC raw value against the normalized thresholds.
+   When a new sample is received via DMA, the ISR shall compare the ADC raw value against the normalized thresholds.
 
 .. req:: Range determination
    :id: SW_RS_ID_13
 
-   The software shall determine the temperature range as normal, warning, or critical based on the comparison result.
+   The ISR shall determine the temperature range as normal, warning, or critical based on the comparison result.
 
-.. req:: LED state update in main loop
+.. req:: LED state update in ISR
    :id: SW_RS_ID_14
 
-   The software shall update the LED states based on the evaluated temperature range in the main loop and clear the flag after processing.
+   The ISR shall update the LED states based on the evaluated temperature range immediately after processing the sample.
 
