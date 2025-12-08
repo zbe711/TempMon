@@ -43,6 +43,8 @@ int adc_start_conversion(adc_channel_t channel)
 #if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
         g_adc_buffer = mock_adc_get_value();
 #else
+        /* In real HW: DMA streams ADC sample from ADC data register to shared memory.
+         * (e.g., ADC1->DR) to g_adc_buffer when conversion completes. */
         g_adc_buffer = 2048;
 #endif
         

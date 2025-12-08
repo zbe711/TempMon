@@ -6,7 +6,7 @@
 
 static time_isr_callback_t g_isr_callback = NULL;
 
-static void adc_dma_complete_isr(void)
+static void time_complete_isr(void)
 {
     if (g_isr_callback != NULL)
     {
@@ -24,7 +24,7 @@ void time_init(void)
     gpt_init();
     adc_init();
     g_isr_callback = NULL;
-    adc_register_dma_callback(adc_dma_complete_isr);
+    adc_register_dma_callback(time_complete_isr);
 }
 
 int time_start_timer(uint32_t freq_hz)
