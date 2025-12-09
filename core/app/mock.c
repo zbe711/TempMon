@@ -8,7 +8,7 @@
 
 uint16_t mock_adc_get_value(void)
 {
-    return (uint16_t)(rand() % 4096);
+    return (uint16_t)(rand() % 1000);
 }
 
 void* mock_i2c_get_handle(void)
