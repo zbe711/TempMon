@@ -10,7 +10,14 @@
 #define DEFAULT_THRESHOLD_CRITICAL_HIGH 105
 #define DEFAULT_THRESHOLD_CRITICAL_LOW 5
 
+#define HW_REV_A_RESOLUTION_FACTOR 1
 #define HW_REV_B_RESOLUTION_FACTOR 10
+
+#define HW_REV_A_TEMPERATURE_CELSIUS_MIN -40
+#define HW_REV_A_TEMPERATURE_CELSIUS_MAX 140
+
+#define HW_REV_B_TEMPERATURE_CELSIUS_MIN -50
+#define HW_REV_B_TEMPERATURE_CELSIUS_MAX 150
 
 #define GPIO_PIN_LED_GREEN  0
 #define GPIO_PIN_LED_YELLOW 1
@@ -23,19 +30,34 @@ typedef enum
     MON_LED_RED = 2
 } mon_led_color_t;
 
-static uint16_t g_threshold_warning = DEFAULT_THRESHOLD_WARNING;
-static uint16_t g_threshold_critical_high = DEFAULT_THRESHOLD_CRITICAL_HIGH;
-static uint16_t g_threshold_critical_low = DEFAULT_THRESHOLD_CRITICAL_LOW;
+static int32_t g_threshold_warning = DEFAULT_THRESHOLD_WARNING;
+static int32_t g_threshold_critical_high = DEFAULT_THRESHOLD_CRITICAL_HIGH;
+static int32_t g_threshold_critical_low = DEFAULT_THRESHOLD_CRITICAL_LOW;
 
-static void normalize_thresholds(hw_revision_t hw_revision)
+static void set_thresholds(hw_revision_t hw_revision)
 {
+    int32_t factor = 0;
+    int32_t temp_min = 0;
+
     if (hw_revision == HW_REV_B)
     {
-        g_threshold_warning *= HW_REV_B_RESOLUTION_FACTOR;
-        g_threshold_critical_high *= HW_REV_B_RESOLUTION_FACTOR;
-        g_threshold_critical_low *= HW_REV_B_RESOLUTION_FACTOR;
+        factor   = HW_REV_B_RESOLUTION_FACTOR;
+        temp_min = HW_REV_B_TEMPERATURE_CELSIUS_MIN;
     }
+    else
+    {
+        factor   = HW_REV_A_RESOLUTION_FACTOR;
+        temp_min = HW_REV_A_TEMPERATURE_CELSIUS_MIN;
+    }
+
+    const int32_t adc_offset = (-temp_min) * factor;
+
+    g_threshold_warning       = g_threshold_warning       * factor + adc_offset;
+    g_threshold_critical_high = g_threshold_critical_high * factor + adc_offset;
+    g_threshold_critical_low  = g_threshold_critical_low  * factor + adc_offset;
 }
+
+
 
 void mon_init(void)
 {
@@ -50,7 +72,7 @@ void mon_init(void)
         
         if (hw_revision == HW_REV_A || hw_revision == HW_REV_B)
         {
-            normalize_thresholds(hw_revision);
+            set_thresholds(hw_revision);
         }
     }
     else
@@ -69,9 +91,10 @@ static inline void mon_update_leds(mon_led_color_t color)
 
 void mon_process_sample(void)
 {
-    uint16_t adc_raw = adc_read_raw(ADC_CHANNEL_TEMP);
+    int32_t adc_raw = adc_read_raw(ADC_CHANNEL_TEMP);
+
     mon_led_color_t led_color = MON_LED_GREEN;
-    
+
     if (adc_raw < g_threshold_critical_low || adc_raw >= g_threshold_critical_high)
     {
         led_color = MON_LED_RED;
@@ -80,12 +103,8 @@ void mon_process_sample(void)
     {
         led_color = MON_LED_YELLOW;
     }
-    else
-    {
-        led_color = MON_LED_GREEN;
-    }
 
-    printf("ADC raw: %d, LED color: %d\n", adc_raw, led_color);
-    
+    printf("ADC raw: %ld, LED color: %d\n", (long)adc_raw, led_color);
+
     mon_update_leds(led_color);
 }

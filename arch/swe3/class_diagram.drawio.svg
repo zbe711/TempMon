@@ -341,13 +341,13 @@
                         <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe flex-start; justify-content: unsafe flex-start; width: 280px; height: 1px; padding-top: 229px; margin-left: 741px;">
                             <div style="box-sizing: border-box; font-size: 0; text-align: left; max-height: 22px; overflow: hidden; color: #000000; ">
                                 <div style="display: inline-block; font-size: 12px; font-family: &quot;Helvetica&quot;; color: light-dark(#000000, #ffffff); line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
-                                    - normalize_thresholds(): void
+                                    - set_thresholds(): void
                                 </div>
                             </div>
                         </div>
                     </foreignObject>
                     <text x="741" y="241" fill="light-dark(#000000, #ffffff)" font-family="&quot;Helvetica&quot;" font-size="12px">
-                        - normalize_thresholds(): void
+                        - set_thresholds(): void
                     </text>
                 </switch>
             </g>
