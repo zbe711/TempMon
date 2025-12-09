@@ -1,12 +1,24 @@
 #include "HwRevB.hpp"
 
-HwRevB::HwRevB() {
-    constexpr int TEMP_MIN = -50;
-    constexpr int FACTOR = 10;
-    int adc_offset = (-TEMP_MIN) * FACTOR;
-    
-    warning_threshold_       = DEFAULT_WARNING * FACTOR + adc_offset;
-    critical_high_threshold_ = DEFAULT_CRITICAL_HIGH * FACTOR + adc_offset;
-    critical_low_threshold_  = DEFAULT_CRITICAL_LOW * FACTOR + adc_offset;
+#define HW_REV_B_MIN_TEMP -50
+#define HW_REV_B_MAX_TEMP 150
+#define HW_REV_B_RESOLUTION_FACTOR 10
+
+HwRevB::HwRevB(const SerialNumber& serial) : HwRev(serial) {}
+
+HwRevision HwRevB::getRevision() const {
+    return HwRevision::REV_B;
+}
+
+int32_t HwRevB::getMinTemp() const {
+    return HW_REV_B_MIN_TEMP;
+}
+
+int32_t HwRevB::getMaxTemp() const {
+    return HW_REV_B_MAX_TEMP;
+}
+
+int32_t HwRevB::getResolutionFactor() const {
+    return HW_REV_B_RESOLUTION_FACTOR;
 }
 

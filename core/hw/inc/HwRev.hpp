@@ -3,22 +3,32 @@
 
 #include <cstdint>
 
-enum LedColor { GREEN, YELLOW, RED };
+#define HW_SERIAL_NUMBER_SIZE 8U
+
+enum class HwRevision : uint8_t {
+    REV_A = 0,
+    REV_B = 1
+};
+
+struct SerialNumber {
+    char data[HW_SERIAL_NUMBER_SIZE];
+};
 
 class HwRev {
 public:
     virtual ~HwRev();
     
-    LedColor checkThresholds(uint16_t adc_raw) const;
+    virtual HwRevision getRevision() const = 0;
+    virtual int32_t getMinTemp() const = 0;
+    virtual int32_t getMaxTemp() const = 0;
+    virtual int32_t getResolutionFactor() const = 0;
+    
+    const SerialNumber& getSerial() const;
 
 protected:
-    static constexpr int DEFAULT_WARNING = 85;
-    static constexpr int DEFAULT_CRITICAL_HIGH = 105;
-    static constexpr int DEFAULT_CRITICAL_LOW = 5;
+    HwRev(const SerialNumber& serial);
     
-    int32_t warning_threshold_;
-    int32_t critical_high_threshold_;
-    int32_t critical_low_threshold_;
+    SerialNumber serial_;
 };
 
 #endif

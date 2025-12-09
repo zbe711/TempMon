@@ -1,13 +1,9 @@
 #include "HwRev.hpp"
 
+HwRev::HwRev(const SerialNumber& serial) : serial_(serial) {}
+
 HwRev::~HwRev() = default;
 
-LedColor HwRev::checkThresholds(uint16_t adc_raw) const {
-    int32_t val = static_cast<int32_t>(adc_raw);
-    
-    if (val >= critical_high_threshold_ || val < critical_low_threshold_)
-        return RED;
-    if (val >= warning_threshold_)
-        return YELLOW;
-    return GREEN;
+const SerialNumber& HwRev::getSerial() const {
+    return serial_;
 }
